@@ -6,36 +6,17 @@ Created on Mon Apr 13 15:07:10 2015
 """
 
 import nltk
-from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
 from nltk.probability import FreqDist, ConditionalFreqDist
 import itertools
 
-from bs4 import BeautifulSoup
-import sys
-import csv
-import jieba  
-import time
-import sys
-import re
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn import svm
-from sklearn.naive_bayes import MultinomialNB 
+import getdata
 
 start_time = time.clock()
 stopfile = open('data\stop.txt')
 stopwords = stopfile.read().decode('utf-8').split('\n')
 
-def bag_of_words(words):
-    return dict([(word, True) for word in words])
-    
-def review_to_wordlist(review):
-    words = jieba.cut(review)
-    words = [w for w in words if not w in stopwords]
-    return(words)
-    
+
 fp = open('data\cn_sample_data\sample.positive.txt')
 
 soupp = BeautifulSoup(fp)
@@ -136,8 +117,7 @@ def test_features(feature_extraction_method):
     testFeatures = []
     for i in datatestone:
         testWords = feature_extraction_method(i)
-        print testWords
-        print i
+
         testFeatures.append(" ".join(testWords))
     return testFeatures
 
@@ -154,7 +134,7 @@ testFeatures = test_features(best_word_features)
 train = posFeatures+negFeatures
 
 
-vectorizer=CountVectorizer()
+vectorizer=CountVectorizer(max_features = 2648)
 train_data = vectorizer.fit_transform(train)
 train_data = train_data.toarray()
 
